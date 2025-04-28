@@ -15,8 +15,7 @@ int main() {
         {'a', 1},
         {'a', -1},//Invalid range should result
         {'Z', -1},
-        {"%", 5},  // Invalid character should result
-        {10, 5},  // Invalid character should result
+        {'?', 5},  // Invalid character should result
         {'A', 32}, // Invalid upper/lower case transitions
     };
 
@@ -51,6 +50,7 @@ char character(char start, int offset) {
     if (!isalpha(newAsciiValue)) {
         throw "InvalidRangeException: Resulting character is out of range.";
     }
+    // exception for if start or target if its not both letter
     if ((isupper(start) && !isupper(newAsciiValue)) ||
         (islower(start) && !islower(newAsciiValue))) {
         throw "InvalidRangeException: Upper- and lower-case transitions are not allowed.";
