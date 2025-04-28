@@ -1,56 +1,60 @@
 // CIS 1202 Exceptions.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //Sue Klosterman Spring 2025
 
-#include <string>
 #include <iostream>
+#include <vector>
+#include <stdexcept>
 using namespace std;
 
+// Function prototype
 char character(char start, int offset);
 
+int main() {
+    // Test data: vector of pairs (letter, offset)
+    vector<pair<char, int>> testData = {
+        {'a', 1},
+        {'a', -1},//Invalid range should result
+        {'Z', -1},
+        {"%", 5},  // Invalid character should result
+        {10, 5},  // Invalid character should result
+        {'A', 32}, // Invalid upper/lower case transitions
+    };
 
-int main()
-{
-    char inputLetter;
-    int inputNumber;
+    cout << "Calculating Character Offsets - No Upper / Lower Case Transitions" << endl;
+    cout << "_________________________________________________________________" << endl;
 
-    // Prompt user for inputs
-
-    cout << "Character Offsets Calculation" << endl;
-    cout << "______________________________" << endl;
-
-    cout << "Enter a letter: ";
-    cin >> inputLetter;
-
-    cout << "Enter a numeric value: ";
-    cin >> inputNumber;
-
-    // Call the function and output the result
-    char result = character(inputLetter, inputNumber);
-    cout << "The new letter is: " << result << endl;
+    for (const auto& test : testData) {
+        try {
+            char result = character(test.first, test.second);  // Call function
+            cout << "character('" << test.first << "', " << test.second
+                << ") = '" << result << "'" << endl;
+        }
+        catch (const char* exceptionMessage) {
+            cout << "character('" << test.first << "', " << test.second
+                << ") threw an exception: " << exceptionMessage << endl;
+        }
+    }
 
     return 0;
 }
 
-
-
-char character(char start, int offset) 
-
-
-
-
-{ 
-    if (inputLetter ==
-    // Convert the character to its ASCII value
+// Function definition
+char character(char start, int offset) {
+    // exception for start if its not a letter
+   
+    if (!isalpha(start)) {
+        throw "InvalidCharacterException: Input must be a valid letter.";
+    }
     int asciiValue = static_cast<int>(start);
+    int newAsciiValue = asciiValue + offset;
+    // exception for target if its not a letter
+    if (!isalpha(newAsciiValue)) {
+        throw "InvalidRangeException: Resulting character is out of range.";
+    }
+    if ((isupper(start) && !isupper(newAsciiValue)) ||
+        (islower(start) && !islower(newAsciiValue))) {
+        throw "InvalidRangeException: Upper- and lower-case transitions are not allowed.";
+    }
 
-    // Apply addition or subtraction
-    int newAsciiValue = asciiValue + offset; 
-
-    // Convert the resulting ASCII value back to a character
-    char newLetter = static_cast<char>(newAsciiValue);
-
-    // Return the new character
-    return newLetter;
+    return static_cast<char>(newAsciiValue);
 }
-
-
